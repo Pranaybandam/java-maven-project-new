@@ -1,0 +1,15 @@
+---
+- hosts: web
+  user: ansible
+  connection: ssh
+  become: yes
+  tasks:
+
+    - name: Pull Docker Image
+      docker_container:
+        name: myapp
+        image: pranay/myapp:latest
+        state: started
+        recreate: yes
+        ports:
+          - "8080:9090"
