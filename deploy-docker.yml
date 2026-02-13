@@ -1,15 +1,16 @@
 ---
 - hosts: web
-  user: ansible
-  connection: ssh
   become: yes
   tasks:
 
-    - name: Pull Docker Image
-      docker_container:
-        name: myapp
-        image: pranay/myapp:latest
-        state: started
-        recreate: yes
-        ports:
-          - "8080:9090"
+    - name: Copy WAR file to Tomcat
+      copy:
+        src: target/myapp.war
+        dest: /opt/tomcat/webapps/myapp.war
+      notify: restart tomcat
+
+  handlers:
+    - name: restart tomcat
+      service:
+        name: tomcat
+        state: restarted
